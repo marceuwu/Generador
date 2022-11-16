@@ -11,9 +11,37 @@ namespace Generador
 {
     public class Lenguaje : Sintaxis, IDisposable
     {
+        public Lenguaje()
+        {
+        }
+        public Lenguaje(string nombre):base(nombre)
+        { 
+        }
         public void Dispose()
         {
             cerrar();
+        }
+        public void Gramatica()
+        {
+            Cabecera();
+            ListaProducciones();
+        }
+        private void Cabecera()
+        {
+            match("Gramatica");
+            match(":");
+            match(Tipos.SNT);
+            match(Tipos.FinProduccion);
+        }
+        private void ListaProducciones()
+        {
+            match(Tipos.SNT);
+            match(Tipos.Produce);
+            match(Tipos.FinProduccion);
+            if(!FinArchivo())
+            {
+                ListaProducciones();
+            }
         }
     }
 }
