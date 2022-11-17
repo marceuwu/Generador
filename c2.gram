@@ -1,4 +1,5 @@
-Gramatica: c
+Gramatica: cplusplus
     Programa  -> 
     Librerias -> 
-    
+    Variables -> 
+    ListaIdentificadores -> 
