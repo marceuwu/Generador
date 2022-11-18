@@ -90,11 +90,11 @@ namespace Generador
             lenguaje.WriteLine("string nombreProyecto;");
             lenguaje.WriteLine("public Lenguaje()");
             lenguaje.WriteLine("{");
-            lenguaje.WriteLine("nombreProyecto = "";");
+            lenguaje.WriteLine("nombreProyecto = \"\";");
             lenguaje.WriteLine("}");
             lenguaje.WriteLine("public Lenguaje(string nombre):base(nombre))");
             lenguaje.WriteLine("{ ");
-            lenguaje.WriteLine("nombreProyecto = "";)");
+            lenguaje.WriteLine("nombreProyecto = \"\";)");
             lenguaje.WriteLine("}");
             lenguaje.WriteLine("public void Dispose()");
             lenguaje.WriteLine("        {");
@@ -102,61 +102,59 @@ namespace Generador
             lenguaje.WriteLine("        }");
             lenguaje.WriteLine("        private void Programa(string espacioProyecto,string produccionPrincipal)");
             lenguaje.WriteLine("        {");
-            lenguaje.WriteLine("programa.WriteLine("using System;");");
-            lenguaje.WriteLine("programa.WriteLine("using System.IO;");");
-            lenguaje.WriteLine("           programa.WriteLine();");
-            lenguaje.WriteLine("           programa.WriteLine("namespace "+espacioProyecto);");
-            lenguaje.WriteLine("programa.WriteLine("{");");
-            lenguaje.WriteLine("programa.WriteLine("\tpublic class Program");");
-            lenguaje.WriteLine("programa.WriteLine("\t{"););
-            lenguaje.WriteLine("programa.WriteLine("\t\tstatic void Main(string[] args)");");
-            lenguaje.WriteLine("programa.WriteLine("\t\t{");");
-                        programa.WriteLine();
-                        programa.WriteLine("\t\t\tusing (Lenguaje a = new Lenguaje())");
-                        programa.WriteLine("\t\t\t{");
-                        programa.WriteLine("\t\t\t\ttry");
-                        programa.WriteLine("\t\t\t\t{");
-                        programa.WriteLine("\t\t\t\ta."+produccionPrincipal.ToString()+"();");
-                        programa.WriteLine("\t\t\t}");
-                        programa.WriteLine("\t\t\tcatch (Exception e)");
-                        programa.WriteLine("\t\t\t{");
-                        programa.WriteLine("\t\t\t\tConsole.WriteLine(e.Message);");
-                        programa.WriteLine("\t\t\t}");
-                        programa.WriteLine("\t\t}");
-                        programa.WriteLine("\t\tConsole.ReadLine();");
-                        programa.WriteLine("\t}");
-                        programa.WriteLine("}");
-                        programa.WriteLine("}");
-                    }
-
-
-                    public void Gramatica()
-                    {
-                        Cabecera();
-                        Programa(nombreProyecto,"programa");
-                        ListaProducciones();
-                    }
-                    private void Cabecera()
-                    {
-                        match("Gramatica");
-                        match(":");
-                        nombreProyecto = getContenido();
-                        match(Tipos.SNT);
-                        match(Tipos.FinProduccion);
-                    }
-                    private void ListaProducciones()
-                    {
-                        match(Tipos.SNT);
-                        match(Tipos.Produce);
-                        match(Tipos.FinProduccion);
-                        if(!FinArchivo())
-                        {
-                            ListaProducciones();
-                        }
-                    }
-                }
-            }
-                    }
+            lenguaje.WriteLine("programa.WriteLine(\"using System;\");");
+            lenguaje.WriteLine("programa.WriteLine(\"using System.IO;\");");
+            lenguaje.WriteLine("programa.WriteLine();");
+            lenguaje.WriteLine("           programa.WriteLine(\"namespace \"+espacioProyecto);");
+            lenguaje.WriteLine("programa.WriteLine(\"{\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\tpublic class Program\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t{\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\tstatic void Main(string[] args)\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t{\");");
+            lenguaje.WriteLine("programa.WriteLine();");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\tusing (Lenguaje a = new Lenguaje())\");");
+            programa.WriteLine("\t\t\t{");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t\ttry\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t\t{\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t\ta.\"+produccionPrincipal.ToString()+\"();\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t}\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\tcatch (Exception e)\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t{\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t\tConsole.WriteLine(e.Message);\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t\t}\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\t}\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t\tConsole.ReadLine();\");");
+            lenguaje.WriteLine("programa.WriteLine(\"\t}\");");
+            lenguaje.WriteLine("programa.WriteLine(\"}\");");
+            lenguaje.WriteLine("programa.WriteLine(\"}\");");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("public void Gramatica()");
+            lenguaje.WriteLine("{");
+            lenguaje.WriteLine("Cabecera();");
+            lenguaje.WriteLine("Programa(nombreProyecto,\"programa\");");
+            lenguaje.WriteLine("ListaProducciones();");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("private void Cabecera()");
+            lenguaje.WriteLine("{");
+            lenguaje.WriteLine("match(\"Gramatica\");");
+            lenguaje.WriteLine("match(\":\");");
+            lenguaje.WriteLine("nombreProyecto = getContenido();");
+            lenguaje.WriteLine("match(Tipos.SNT);");
+            lenguaje.WriteLine("match(Tipos.FinProduccion);");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("private void ListaProducciones()");
+            lenguaje.WriteLine("{");
+            lenguaje.WriteLine("match(Tipos.SNT);");
+            lenguaje.WriteLine("match(Tipos.Produce);");
+            lenguaje.WriteLine("match(Tipos.FinProduccion);");
+            lenguaje.WriteLine("if(!FinArchivo())");
+            lenguaje.WriteLine("{");
+            lenguaje.WriteLine("ListaProducciones();");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("}");
+            lenguaje.WriteLine("}");
+        }
         private void ListaProducciones()
         {
             lenguaje.WriteLine("private void "+getContenido()+"()");
