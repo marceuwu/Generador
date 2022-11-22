@@ -17,11 +17,11 @@ namespace Generador
 {
     public class Lenguaje : Sintaxis, IDisposable
     {
-        public Lenguaje()
+        public Lenguaje(string nombre) : base(nombre)
         {
         }
-        public Lenguaje(string nombre):base(nombre)
-        { 
+        public Lenguaje()
+        {
         }
         public void Dispose()
         {
@@ -30,111 +30,101 @@ namespace Generador
         private void Programa(string produccionPrincipal)
         {
             programa.WriteLine("using System;");
-            programa.WriteLine("using System.IO;");
-            programa.WriteLine("using System.Collections.Generic;");
-            programa.WriteLine();
             programa.WriteLine("namespace Generico");
             programa.WriteLine("{");
-            programa.WriteLine("\tpublic class Program");
-            programa.WriteLine("\t{");
-            programa.WriteLine("\t\tstatic void Main(string[] args)");
-            programa.WriteLine("\t\t{");
-            programa.WriteLine("\t\t\ttry");
-            programa.WriteLine("\t\t\t{");
-            programa.WriteLine("\t\t\t\tusing (Lenguaje a = new Lenguaje())");
-            programa.WriteLine("\t\t\t\t{");
-            programa.WriteLine("\t\t\t\t\ta." + produccionPrincipal + "();");
-            programa.WriteLine("\t\t\t\t}");
-            programa.WriteLine("\t\t\t}");
-            programa.WriteLine("\t\t\tcatch (Exception e)");
-            programa.WriteLine("\t\t\t{");
-            programa.WriteLine("\t\t\t\tConsole.WriteLine(e.Message);");
-            programa.WriteLine("\t\t\t}");
-            programa.WriteLine("\t\t}");
-            programa.WriteLine("\t}");
+            programa.WriteLine("    public class Program");
+            programa.WriteLine("    {");
+            programa.WriteLine("        static void Main(string[] args)");
+            programa.WriteLine("        {");
+            programa.WriteLine("            try");
+            programa.WriteLine("            {");
+            programa.WriteLine("                using (Lenguaje a = new Lenguaje())");
+            programa.WriteLine("                {");
+            programa.WriteLine("                    a." + produccionPrincipal.ToLower() + "();");
+            programa.WriteLine("                }");
+            programa.WriteLine("            }");
+            programa.WriteLine("            catch (Exception e)");
+            programa.WriteLine("            {");
+            programa.WriteLine("                Console.WriteLine(e.Message);");
+            programa.WriteLine("            }");
+            programa.WriteLine("        }");
+            programa.WriteLine("    }");
             programa.WriteLine("}");
         }
-
-
-        public void Gramatica()
+        public void gramatica()
         {
-            Cabecera();
+            cabecera();
             Programa("programa");
-            CabeceraLenguaje();
-            ListaProducciones();
-            programa.WriteLine("\t}");
-            programa.WriteLine("}");
+            cabeceraLenguaje();
+            listaDeProducciones();
+            lenguaje.WriteLine("\t}");
+            lenguaje.WriteLine("}");
         }
-        private void Cabecera()
+        private void cabecera()
         {
             match("Gramatica");
             match(":");
             match(Tipos.SNT);
             match(Tipos.FinProduccion);
         }
-        private void CabeceraLenguaje()
+        private void cabeceraLenguaje()
         {
             lenguaje.WriteLine("using System;");
             lenguaje.WriteLine("using System.Collections.Generic;");
+            lenguaje.WriteLine("using System.Linq;");
+            lenguaje.WriteLine("using System.Threading.Tasks;");
+            lenguaje.WriteLine("");
             lenguaje.WriteLine("namespace Generico");
             lenguaje.WriteLine("{");
-            lenguaje.WriteLine("\tpublic class Lenguaje : Sintaxis, IDisposable");
-            lenguaje.WriteLine("\t{");
-            lenguaje.WriteLine("\t\tstring nombreProyecto;");
-            lenguaje.WriteLine("\t\tpublic Lenguaje(string nombre) : base(nombre)");
-            lenguaje.WriteLine("\t\t{");
-            lenguaje.WriteLine("\t\t}");
-            lenguaje.WriteLine("\t\tpublic Lenguaje()");
-            lenguaje.WriteLine("\t\t{");
-            lenguaje.WriteLine("\t\t}");
-            lenguaje.WriteLine("\t\tpublic void Dispose()");
-            lenguaje.WriteLine("\t\t{");
-            lenguaje.WriteLine("\t\t\tcerrar();");
-            lenguaje.WriteLine("\t\t}");
+            lenguaje.WriteLine("    public class Lenguaje : Sintaxis, IDisposable");
+            lenguaje.WriteLine("    {");
+            lenguaje.WriteLine("        public Lenguaje(string nombre) : base(nombre)");
+            lenguaje.WriteLine("        {");
+            lenguaje.WriteLine("        }");
+            lenguaje.WriteLine("        public Lenguaje()");
+            lenguaje.WriteLine("        {");
+            lenguaje.WriteLine("        }");
+            lenguaje.WriteLine("        public void Dispose()");
+            lenguaje.WriteLine("        {");
+            lenguaje.WriteLine("            cerrar();");
+            lenguaje.WriteLine("        }");
         }
-        private void ListaProducciones()
+        private void listaDeProducciones()
         {
-            lenguaje.WriteLine("\t\tprivate void "+getContenido()+"()");
-            lenguaje.WriteLine("\t\t{");       
+            lenguaje.WriteLine("\t\tprivate void " + getContenido() + "()");
+            lenguaje.WriteLine("\t\t{");
             match(Tipos.SNT);
             match(Tipos.Produce);
             simbolos();
             match(Tipos.FinProduccion);
-            lenguaje.WriteLine("\t\t}");  
-            if(!FinArchivo())
+            lenguaje.WriteLine("\t\t}");
+            if (!FinArchivo())
             {
-                ListaProducciones();
+                listaDeProducciones();
             }
         }
         private void simbolos()
         {
-            if(esTipo(getContenido()))
+            if (esTipo(getContenido()))
             {
-                lenguaje.WriteLine("\t\t\t\tmatch(Tipos."+getContenido()+");");
+                lenguaje.WriteLine("\t\t\tmatch(Tipos." + getContenido() + ");");
                 match(Tipos.SNT);
-                
             }
-            else if(getClasificacion() == Tipos.ST)
+            else if (getClasificacion() == Tipos.ST)
             {
-                lenguaje.WriteLine("\t\t\t\tmatch(Tipos."+getContenido()+");");
+                lenguaje.WriteLine("\t\t\tmatch(\"" + getContenido() + "\");");
                 match(Tipos.ST);
-
             }
-            else if(getClasificacion() == Tipos.SNT)
+            else if (getClasificacion() == Tipos.SNT)
             {
-                lenguaje.WriteLine("\t\t\t\tmatch(Tipos."+getContenido()+");");
+                lenguaje.WriteLine("\t\t\t" + getContenido() + "();");
                 match(Tipos.SNT);
             }
-            else
-            {
-                throw new Exception("Error de sintaxis");
-            }
-            if(getClasificacion() != Tipos.FinProduccion)
+            if (getClasificacion() != Tipos.FinProduccion)
             {
                 simbolos();
             }
         }
-
         private bool esTipo(string clasificacion)
         {
             switch (clasificacion)
@@ -147,14 +137,14 @@ namespace Generador
                 case "OperadorLogico":
                 case "OperadorRelacional":
                 case "OperadorTernario":
-                case "OperadorTermino": 
+                case "OperadorTermino":
                 case "OperadorFactor":
-                case "IncrementoTermino": 
+                case "IncrementoTermino":
                 case "IncrementoFactor":
                 case "FinSentencia":
                 case "Cadena":
                 case "TipoDato":
-                case "Zona": 
+                case "Zona":
                 case "Condicion":
                 case "Ciclo":
                 return true;

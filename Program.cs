@@ -13,7 +13,7 @@ namespace Generador
             {
                 try
                 {
-                    a.Gramatica();
+                    a.gramatica();
                     /*while(!a.FinArchivo())
                     {
                         a.NextToken();
