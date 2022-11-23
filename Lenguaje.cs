@@ -13,25 +13,41 @@ using System.Text.RegularExpressions;
 //Requerimiento 4.- El constructor lexico parametrizado debe validar que la extension del archivo a compilar sea .gen 
 //                  si no es .gen debe llamar una excepcion
 //Requerimiento 5.- Resolver la ambiguedad de ST y SNT
+//                  Recorrer linea por linea el archivo .gram para extraer
+//Requerimiento 6.- Agregar el parentesis izq y der escapados en la matriz de ttransiciones 
+//Requerimiento 7.- Implementar el or y la cerradura epsilon | ?
 namespace Generador
 {
     public class Lenguaje : Sintaxis, IDisposable
     {
+        List<string> listaSNT;
         string sLenguaje;
         string sPrograma;
         public Lenguaje(string nombre) : base(nombre)
         {
             sLenguaje = "";
             sPrograma = "";
+            listaSNT = new List<string>();
         }
         public Lenguaje()
         {
             sLenguaje = "";
             sPrograma = "";
+            listaSNT = new List<string>();
         }
         public void Dispose()
         {
             cerrar();
+        }
+        private bool esSNT(string contenido)
+        {
+            return listaSNT.Contains(contenido);
+            //return true;
+        }
+        private void agregaSNT(string contenido)
+        {
+            //Requerimiento 5
+            listaSNT.Add(contenido);
         }
         public string tabular(string cadena)
         {
@@ -70,6 +86,10 @@ namespace Generador
         }
         private void Programa(string produccionPrincipal)
         {
+            agregaSNT("Programa");
+            agregaSNT("Librerias");
+            agregaSNT("Variables");
+            agregaSNT("ListaIdentificadores");
             sPrograma = sPrograma +"\nusing System;";
             sPrograma = sPrograma +"\nnamespace Generico";
             sPrograma = sPrograma +"\n{";
@@ -107,7 +127,7 @@ namespace Generador
         {
             match("Gramatica");
             match(":");
-            match(Tipos.SNT);
+            match(Tipos.ST);
             match(Tipos.FinProduccion);
         }
         private void cabeceraLenguaje()
@@ -136,13 +156,14 @@ namespace Generador
         {
             sLenguaje = sLenguaje +"private void " + getContenido() + "()";
             sLenguaje = sLenguaje +"{";
-            match(Tipos.SNT);
+            match(Tipos.ST);
             match(Tipos.Produce);
             simbolos();
             match(Tipos.FinProduccion);
             sLenguaje = sLenguaje +"}";
             if (!FinArchivo())
             {
+                Console.WriteLine(getContenido());
                 listaDeProducciones();
             }
         }
@@ -151,17 +172,17 @@ namespace Generador
             if (esTipo(getContenido()))
             {
                 sLenguaje = sLenguaje +"match(Tipos." + getContenido() + ");";
-                match(Tipos.SNT);
+                match(Tipos.ST);
+            }
+            else if (esSNT(getContenido()))
+            {
+                sLenguaje = sLenguaje + getContenido() + "();";
+                match(Tipos.ST);
             }
             else if (getClasificacion() == Tipos.ST)
             {
                 sLenguaje = sLenguaje +"match(\"" + getContenido() + "\");";
                 match(Tipos.ST);
-            }
-            else if (getClasificacion() == Tipos.SNT)
-            {
-                sLenguaje = sLenguaje + getContenido() + "();";
-                match(Tipos.SNT);
             }
             if (getClasificacion() != Tipos.FinProduccion)
             {
