@@ -16,6 +16,7 @@ namespace Generador
         protected int contCaracteres = 0;
         int[,] TRAND = new int[,]
         {
+            //  WS, -, >, L, EOL, Lambda, \(, \)
             {0,1,5,3,4,5},
             {F,F,2,F,F,F},
             {F,F,F,F,F,F},
@@ -28,9 +29,9 @@ namespace Generador
         public Lexico()
         {
             linea = 1;
-            string path = "C:\\Mis archivos\\Quinto semestre\\LyA\\Generico\\c.gram";
+            string path = "c.gram";
             bool existencia = File.Exists(path);
-            log = new StreamWriter("C:\\Mis archivos\\Quinto semestre\\LyA\\Generico\\prueba.Log"); 
+            log = new StreamWriter("prueba.Log"); 
             log.AutoFlush = true;
             lenguaje = new StreamWriter("C:\\Generico\\Lenguaje.cs"); 
             lenguaje.AutoFlush = true;
@@ -52,7 +53,6 @@ namespace Generador
         public Lexico(string nombre)
         {
             linea = 1;
-
             string pathLog = Path.ChangeExtension(nombre, ".log");
             log = new StreamWriter(pathLog); 
             log.AutoFlush = true;

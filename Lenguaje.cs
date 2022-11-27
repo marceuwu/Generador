@@ -23,16 +23,19 @@ namespace Generador
         List<string> listaSNT;
         string sLenguaje;
         string sPrograma;
+        string sPrimeraProduccion;
         public Lenguaje(string nombre) : base(nombre)
         {
             sLenguaje = "";
             sPrograma = "";
+            sPrimeraProduccion = "";
             listaSNT = new List<string>();
         }
         public Lenguaje()
         {
             sLenguaje = "";
             sPrograma = "";
+            sPrimeraProduccion = "";
             listaSNT = new List<string>();
         }
         public void Dispose()
@@ -117,7 +120,7 @@ namespace Generador
             cabecera();
             Programa("Programa");
             cabeceraLenguaje();
-            listaDeProducciones();
+            listaDeProducciones(true);
             sLenguaje = sLenguaje +"\n}";
             sLenguaje = sLenguaje +"\n}";
             lenguaje.Write(tabular(sLenguaje));
@@ -152,9 +155,19 @@ namespace Generador
             sLenguaje = sLenguaje +"\ncerrar();";
             sLenguaje = sLenguaje +"\n}";
         }
-        private void listaDeProducciones()
+        private void listaDeProducciones(bool primeraProduccion)
         {
-            sLenguaje = sLenguaje +"private void " + getContenido() + "()";
+            //Requerimiento 2
+            if(primeraProduccion)
+            {
+                sLenguaje = sLenguaje +"\npublic void " + getContenido()+ "()";
+                primeraProduccion = false;
+                sPrimeraProduccion = sLenguaje+"{}";
+            }
+            else
+            {
+               sLenguaje = sLenguaje +"private void " + getContenido() + "()"; 
+            }
             sLenguaje = sLenguaje +"{";
             match(Tipos.ST);
             match(Tipos.Produce);
@@ -164,12 +177,23 @@ namespace Generador
             if (!FinArchivo())
             {
                 Console.WriteLine(getContenido());
-                listaDeProducciones();
+                listaDeProducciones(primeraProduccion);
             }
         }
         private void simbolos()
         {
-            if (esTipo(getContenido()))
+            if(getContenido() == "(")
+            {
+                match("(");
+                //lenguaje.WriteLine("\t\tif ()");
+                //lenguaje.WriteLine("\t\t{");
+                sLenguaje += "if ()";
+                sLenguaje += "{";
+                simbolos();
+                match(")");
+                 sLenguaje += "}";
+            }
+            else if (esTipo(getContenido()))
             {
                 sLenguaje = sLenguaje +"match(Tipos." + getContenido() + ");";
                 match(Tipos.ST);
@@ -184,7 +208,7 @@ namespace Generador
                 sLenguaje = sLenguaje +"match(\"" + getContenido() + "\");";
                 match(Tipos.ST);
             }
-            if (getClasificacion() != Tipos.FinProduccion)
+            if (getClasificacion() != Tipos.FinProduccion && getContenido() != ")")
             {
                 simbolos();
             }
