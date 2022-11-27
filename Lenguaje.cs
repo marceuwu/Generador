@@ -157,7 +157,7 @@ namespace Generador
         }
         private void listaDeProducciones(bool primeraProduccion)
         {
-            //Requerimiento 2
+            //Requerimiento 2 y 3
             if(primeraProduccion)
             {
                 sLenguaje = sLenguaje +"\npublic void " + getContenido()+ "()";

@@ -53,6 +53,7 @@ namespace Generador
         public Lexico(string nombre)
         {
             linea = 1;
+            string extArchivo;
             string pathLog = Path.ChangeExtension(nombre, ".log");
             log = new StreamWriter(pathLog); 
             log.AutoFlush = true;
@@ -60,16 +61,23 @@ namespace Generador
             lenguaje.AutoFlush = true;
             programa = new StreamWriter("C:\\Generico\\Programa.cs");
             programa.AutoFlush = true;
-            log.WriteLine("Archivo: "+nombre);
-            log.WriteLine("Fecha: " + DateTime.Now);
-
-            if (File.Exists(nombre))
+            extArchivo = Path.GetExtension(nombre);
+            if(extArchivo == ".gram")
             {
-                archivo = new StreamReader(nombre);
+                log.WriteLine("Archivo: "+nombre);
+                log.WriteLine("Fecha: " + DateTime.Now);
+                if (File.Exists(nombre))
+                {
+                    archivo = new StreamReader(nombre);
+                }
+                else
+                {
+                    throw new Error("Error: El archivo " +Path.GetFileName(nombre)+ " no existe ", log);
+                }
             }
             else
             {
-                throw new Error("Error: El archivo " +Path.GetFileName(nombre)+ " no existe ", log);
+                throw new Error("Error: El archivo no es de extension .gram", log);
             }
         }
         public int getContCaracter()
