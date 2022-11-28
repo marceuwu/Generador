@@ -73,19 +73,19 @@ namespace Generador
                 {
                     sTabulador += "\t";
                 }
-                if(cadena[i] == '\n')
+                if(cadena[i] == '}')
                 {
-                    sNuevaCadena += cadena[i] + sTabulador;
+                    sNuevaCadena += sTabulador+ cadena[i];
                 }
-                else if(cadena[i] == '}' || cadena[i] == '{' || cadena[i] == ';')
+                else if(cadena[i] == '\n')
                 {
-                    if(cadena[i] == '}')
+                    if(cadena[i+1] == '}')
                     {
                         sNuevaCadena += cadena[i];
                     }
                     else
                     {
-                        sNuevaCadena += cadena[i] + "\n" + sTabulador;
+                        sNuevaCadena += cadena[i] + sTabulador;
                     }
                 }
                 else
