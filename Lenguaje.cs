@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 //                  si no es .gen debe llamar una excepcion
 //Requerimiento 5.- Resolver la ambiguedad de ST y SNT
 //                  Recorrer linea por linea el archivo .gram para extraer del nombre de cada produccion
-//Requerimiento 6.- Agregar el parentesis izq y der escapados en la matriz de ttransiciones 
+//Requerimiento 6.- Agregar el parentesis izq y der escapados en la matriz de transicion 
 //Requerimiento 7.- Implementar la cerradura epsilon ?
 namespace Generador
 {
@@ -51,10 +51,15 @@ namespace Generador
         private void agregaSNT(string contenido)
         {
             //Requerimiento 5
-            string [] lineasArchivo = System.IO.File.ReadAllLines("c.gram2");
-            listaSNT.Add(contenido);
+            string[] lineas = System.IO.File.ReadAllLines("c2.gram");
+            foreach (string linea in lineas)
+            {
+                if (linea.StartsWith(contenido))
+                {
+                    listaSNT.Add(contenido);
+                }
+            }
         }
-
         public string tabular(string cadena)
         {
             string sNuevaCadena = "";
@@ -186,22 +191,27 @@ namespace Generador
             sLenguaje = sLenguaje +"\n}";
             if (!FinArchivo())
             {
-                Console.WriteLine(getContenido());
+                //Console.WriteLine(getContenido());
                 listaDeProducciones(primeraProduccion);
             }
         }
         private void simbolos()
         {
-            if(getContenido() == "(")
+            if(getContenido() == "\\(")
             {
-                match("(");
-                //lenguaje.WriteLine("\t\tif ()");
-                //lenguaje.WriteLine("\t\t{");
-                sLenguaje += "\nif ()";
+                match("\\(");
+                if(esTipo(getContenido()))
+                {
+                    sLenguaje += "\nif (getClasificacion() == Tipos."+getContenido()+")";
+                }
+                else
+                {
+                    sLenguaje += "\nif (getClasificacion() == \\"+getContenido()+"\\)";
+                }
                 sLenguaje += "\n{";
                 simbolos();
-                match(")");
-                 sLenguaje += "\n}";
+                match("\\)");
+                sLenguaje += "\n}";
             }
             else if (esTipo(getContenido()))
             {
@@ -218,7 +228,7 @@ namespace Generador
                 sLenguaje = sLenguaje +"\nmatch(\"" + getContenido() + "\");";
                 match(Tipos.ST);
             }
-            if (getClasificacion() != Tipos.FinProduccion && getContenido() != ")")
+            if (getClasificacion() != Tipos.FinProduccion && getContenido() != "\\)")
             {
                 simbolos();
             }
