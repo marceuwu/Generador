@@ -52,6 +52,7 @@ namespace Generador
             //Requerimiento 5
             listaSNT.Add(contenido);
         }
+
         public string tabular(string cadena)
         {
             string sNuevaCadena = "";
@@ -76,9 +77,16 @@ namespace Generador
                 {
                     sNuevaCadena += cadena[i] + sTabulador;
                 }
-                else if(cadena[i] == '}' ||cadena[i] == '{' || cadena[i] == ';')
+                else if(cadena[i] == '}' || cadena[i] == '{' || cadena[i] == ';')
                 {
-                    sNuevaCadena += cadena[i] + "\n" + sTabulador;
+                    if(cadena[i] == '}')
+                    {
+                        sNuevaCadena += cadena[i];
+                    }
+                    else
+                    {
+                        sNuevaCadena += cadena[i] + "\n" + sTabulador;
+                    }
                 }
                 else
                 {
@@ -96,23 +104,23 @@ namespace Generador
             sPrograma = sPrograma +"\nusing System;";
             sPrograma = sPrograma +"\nnamespace Generico";
             sPrograma = sPrograma +"\n{";
-            sPrograma = sPrograma +"\n    public class Program";
-            sPrograma = sPrograma +"\n    {";
-            sPrograma = sPrograma +"\n        static void Main(string[] args)";
-            sPrograma = sPrograma +"\n        {";
-            sPrograma = sPrograma +"\n            try";
-            sPrograma = sPrograma +"\n            {";
-            sPrograma = sPrograma +"\n                using (Lenguaje a = new Lenguaje())";
-            sPrograma = sPrograma +"\n                {";
-            sPrograma = sPrograma +"\n                    a." + produccionPrincipal + "();";
-            sPrograma = sPrograma +"\n                }";
-            sPrograma = sPrograma +"\n            }";
-            sPrograma = sPrograma +"\n            catch (Exception e)";
-            sPrograma = sPrograma +"\n            {";
-            sPrograma = sPrograma +"\n                Console.WriteLine(e.Message);";
-            sPrograma = sPrograma +"\n            }";
-            sPrograma = sPrograma +"\n        }";
-            sPrograma = sPrograma +"\n    }";
+            sPrograma = sPrograma +"\npublic class Program";
+            sPrograma = sPrograma +"\n{";
+            sPrograma = sPrograma +"\nstatic void Main(string[] args)";
+            sPrograma = sPrograma +"\n{";
+            sPrograma = sPrograma +"\ntry";
+            sPrograma = sPrograma +"\n{";
+            sPrograma = sPrograma +"\nusing (Lenguaje a = new Lenguaje())";
+            sPrograma = sPrograma +"\n{";
+            sPrograma = sPrograma +"\na." + produccionPrincipal + "();";
+            sPrograma = sPrograma +"\n}";
+            sPrograma = sPrograma +"\n}";
+            sPrograma = sPrograma +"\ncatch (Exception e)";
+            sPrograma = sPrograma +"\n{";
+            sPrograma = sPrograma +"\nConsole.WriteLine(e.Message);";
+            sPrograma = sPrograma +"\n}";
+            sPrograma = sPrograma +"\n}";
+            sPrograma = sPrograma +"\n}";
             sPrograma = sPrograma +"\n}";
         }
         public void gramatica()
@@ -124,7 +132,7 @@ namespace Generador
             sLenguaje = sLenguaje +"\n}";
             sLenguaje = sLenguaje +"\n}";
             lenguaje.Write(tabular(sLenguaje));
-            programa.Write(sPrograma);
+            programa.Write(tabular(sPrograma));
         }
         private void cabecera()
         {
@@ -157,23 +165,23 @@ namespace Generador
         }
         private void listaDeProducciones(bool primeraProduccion)
         {
-            //Requerimiento 2 y 3
+            //Requerimiento 2 y 3                                 
             if(primeraProduccion)
             {
                 sLenguaje = sLenguaje +"\npublic void " + getContenido()+ "()";
                 primeraProduccion = false;
-                sPrimeraProduccion = sLenguaje+"{}";
+                sPrimeraProduccion = sLenguaje+"\n{}";
             }
             else
             {
-               sLenguaje = sLenguaje +"private void " + getContenido() + "()"; 
+               sLenguaje = sLenguaje +"\nprivate void " + getContenido() + "()"; 
             }
-            sLenguaje = sLenguaje +"{";
+            sLenguaje = sLenguaje +"\n{";
             match(Tipos.ST);
             match(Tipos.Produce);
             simbolos();
             match(Tipos.FinProduccion);
-            sLenguaje = sLenguaje +"}";
+            sLenguaje = sLenguaje +"\n}";
             if (!FinArchivo())
             {
                 Console.WriteLine(getContenido());
@@ -187,25 +195,25 @@ namespace Generador
                 match("(");
                 //lenguaje.WriteLine("\t\tif ()");
                 //lenguaje.WriteLine("\t\t{");
-                sLenguaje += "if ()";
-                sLenguaje += "{";
+                sLenguaje += "\nif ()";
+                sLenguaje += "\n{";
                 simbolos();
                 match(")");
-                 sLenguaje += "}";
+                 sLenguaje += "\n}";
             }
             else if (esTipo(getContenido()))
             {
-                sLenguaje = sLenguaje +"match(Tipos." + getContenido() + ");";
+                sLenguaje = sLenguaje +"\nmatch(Tipos." + getContenido() + ");";
                 match(Tipos.ST);
             }
             else if (esSNT(getContenido()))
             {
-                sLenguaje = sLenguaje + getContenido() + "();";
+                sLenguaje = sLenguaje +"\n" +getContenido() + "();";
                 match(Tipos.ST);
             }
             else if (getClasificacion() == Tipos.ST)
             {
-                sLenguaje = sLenguaje +"match(\"" + getContenido() + "\");";
+                sLenguaje = sLenguaje +"\nmatch(\"" + getContenido() + "\");";
                 match(Tipos.ST);
             }
             if (getClasificacion() != Tipos.FinProduccion && getContenido() != ")")
