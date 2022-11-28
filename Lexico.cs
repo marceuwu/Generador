@@ -16,13 +16,15 @@ namespace Generador
         protected int contCaracteres = 0;
         int[,] TRAND = new int[,]
         {
-            //  WS, -, >, L, EOL, Lambda, \(, \)
-            {0,1,5,3,4,5},
-            {F,F,2,F,F,F},
-            {F,F,F,F,F,F},
-            {F,F,F,3,F,F},
-            {F,F,F,F,F,F},
-            {F,F,F,F,F,F},
+            {0, 1, 8, 3, 4, 8, 5, 8, 8},
+            {F, F, 2, F, F, F, F, F, F},
+            {F, F, F, F, F, F, F, F, F},
+            {F, F, F, 3, F, F, F, F, F},
+            {F, F, F, F, F, F, F, F, F},
+            {F, F, F, F, F, F, F, 6, 7},
+            {F, F, F, F, F, F, F, F, F},
+            {F, F, F, F, F, F, F, F, F},
+            {F, F, F, F, F, F, F, F, F}
             
         };
 
@@ -101,47 +103,52 @@ namespace Generador
 
         private void clasifica(int estado)
         {
-            switch(estado)
+           switch(estado)
             {
                 case 1:
-                    setClasificacion(Tipos.ST); 
+                    setClasificacion(Tipos.ST);
                     break;
                 case 2:
-                    setClasificacion(Tipos.Produce); 
+                    setClasificacion(Tipos.Produce);
                     break;
                 case 3:
-                    setClasificacion(Tipos.ST); 
+                    setClasificacion(Tipos.ST);
                     break;
                 case 4:
-                    setClasificacion(Tipos.FinProduccion); 
+                    setClasificacion(Tipos.FinProduccion);
                     break;
                 case 5:
-                    setClasificacion(Tipos.ST); 
+                    setClasificacion(Tipos.ST);
+                    break;
+                case 6:
+                    setClasificacion(Tipos.PIzq);
+                    break;
+                case 7:
+                    setClasificacion(Tipos.PDer);
+                    break;
+                case 8:
+                    setClasificacion(Tipos.ST);
                     break;
             }
         }
         private int columna(char c)
         {
             if(c == 10)
-            {
                 return 4;
-            }
             else if(char.IsWhiteSpace(c))
-            {
                 return 0;
-            }
             else if(c == '-')
-            {
                 return 1;
-            }
             else if(c == '>')
-            {
                 return 2;
-            }
-            else if(char.IsLetter(c))
-            {
+            else if (char.IsLetter(c))
                 return 3;
-            }
+            else if(c == '\\')
+                return 6;
+            else if(c == '(')
+                return 7;
+            else if(c == ')')
+                return 8;
             return 5;
         }
         public string NextToken() 

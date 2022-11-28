@@ -13,9 +13,9 @@ using System.Text.RegularExpressions;
 //Requerimiento 4.- El constructor lexico parametrizado debe validar que la extension del archivo a compilar sea .gen 
 //                  si no es .gen debe llamar una excepcion
 //Requerimiento 5.- Resolver la ambiguedad de ST y SNT
-//                  Recorrer linea por linea el archivo .gram para extraer
+//                  Recorrer linea por linea el archivo .gram para extraer del nombre de cada produccion
 //Requerimiento 6.- Agregar el parentesis izq y der escapados en la matriz de ttransiciones 
-//Requerimiento 7.- Implementar el or y la cerradura epsilon | ?
+//Requerimiento 7.- Implementar la cerradura epsilon ?
 namespace Generador
 {
     public class Lenguaje : Sintaxis, IDisposable
@@ -44,12 +44,14 @@ namespace Generador
         }
         private bool esSNT(string contenido)
         {
+
             return listaSNT.Contains(contenido);
             //return true;
         }
         private void agregaSNT(string contenido)
         {
             //Requerimiento 5
+            string [] lineasArchivo = System.IO.File.ReadAllLines("c.gram2");
             listaSNT.Add(contenido);
         }
 
