@@ -54,9 +54,14 @@ namespace Generador
             string[] lineas = System.IO.File.ReadAllLines("c2.gram");
             foreach (string linea in lineas)
             {
-                if (linea.StartsWith(contenido))
+                string lineaSinEspacios = linea.Replace(" ", "");
+                int index = lineaSinEspacios.IndexOf("-");
+                if (index > 0)
                 {
-                    listaSNT.Add(contenido);
+                    string snt = lineaSinEspacios.Substring(0, index);
+                    if (!listaSNT.Contains(snt))
+                        //Console.WriteLine(snt);
+                        listaSNT.Add(snt);
                 }
             }
         }
@@ -202,11 +207,11 @@ namespace Generador
                 match("\\(");
                 if(esTipo(getContenido()))
                 {
-                    sLenguaje += "\nif (getClasificacion() == Tipos."+getContenido()+")";
+                    sLenguaje += "\nif (getClasificacion() == Tipos." + getContenido()+")";
                 }
                 else
                 {
-                    sLenguaje += "\nif (getClasificacion() == \\"+getContenido()+"\\)";
+                    sLenguaje += "\nif (getContenido() == \"" + getContenido()+"\")";
                 }
                 sLenguaje += "\n{";
                 simbolos();
@@ -220,7 +225,7 @@ namespace Generador
             }
             else if (esSNT(getContenido()))
             {
-                sLenguaje = sLenguaje +"\n" +getContenido() + "();";
+                sLenguaje = sLenguaje +"\n" + getContenido() + "();";
                 match(Tipos.ST);
             }
             else if (getClasificacion() == Tipos.ST)
