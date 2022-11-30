@@ -75,11 +75,13 @@ namespace Generador
                 sTabulador = "";
                 if (cadena[i] == '{')
                 {
-                    contTab++;
+                    if(cadena[i-1] != '"')
+                        contTab++;
                 }
                 else if (cadena[i] == '}')
                 {
-                    contTab--;
+                    if(cadena[i-1] != '"')
+                        contTab--;
                 }                  
                 for (int j = 0; j < contTab; j++)
                 {
@@ -87,7 +89,10 @@ namespace Generador
                 }
                 if(cadena[i] == '}')
                 {
-                    sNuevaCadena += sTabulador+ cadena[i];
+                    if(cadena[i-1] != '"')
+                        sNuevaCadena += sTabulador+ cadena[i];
+                    else
+                        sNuevaCadena += cadena[i];
                 }
                 else if(cadena[i] == '\n')
                 {
