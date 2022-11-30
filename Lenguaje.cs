@@ -210,13 +210,20 @@ namespace Generador
             if(getContenido() == "\\(")
             {
                 match("\\(");
-                if(esTipo(getContenido()))
+                if(!esSNT(getContenido()))
                 {
-                    sLenguaje += "\nif (getClasificacion() == Tipos." + getContenido()+")";
+                    if(esTipo(getContenido()))
+                    {
+                        sLenguaje += "\nif (getClasificacion() == Tipos." + getContenido()+")";
+                    }
+                    else
+                    {
+                        sLenguaje += "\nif (getContenido() == \"" + getContenido()+"\")";
+                    }
                 }
                 else
                 {
-                    sLenguaje += "\nif (getContenido() == \"" + getContenido()+"\")";
+                    throw new Error("Error en la linea "+linea+" "+getContenido()+" no es un simbolo terminal",log);
                 }
                 sLenguaje += "\n{";
                 simbolos();
